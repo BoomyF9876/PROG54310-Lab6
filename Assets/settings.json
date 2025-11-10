@@ -1,0 +1,35 @@
+{
+  "DefaultFile": "../Assets/Scenes/Scene.json",
+  "ClearColor": {
+    "r": 0.0,
+    "g": 0.0,
+    "b": 0.0
+  },
+  "Camera": {
+    "Position": {
+      "x": 7.0,
+      "y": 0.0,
+      "z": 7.0
+    },
+    "LookAt": {
+      "x": 0.0,
+      "y": 0.0,
+      "z": 0.0
+    },
+    "fov": 45.0,
+    "near": 0.1,
+    "far": 1000.0
+  },
+  "Shaders": [
+    {
+      "name": "Color",
+      "vertex": "Color.vertexshader",
+      "fragment": "Color.fragmentshader"
+    },
+    {
+      "name": "Diffuse",
+      "vertex": "Diffuse.vertexshader",
+      "fragment": "Diffuse.fragmentshader"
+    }
+  ]
+}
