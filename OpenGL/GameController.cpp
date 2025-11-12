@@ -38,11 +38,12 @@ void GameController::RunGame()
         
         for (auto& mesh : meshes)
         {
-            mesh->SetRotation(mesh->GetRotation() + glm::vec3(0.0f, 0.0001f, 0.0f));
+            mesh->SetRotation(mesh->GetRotation() + Time::Instance().DeltaTime() * glm::vec3(0.0f, 0.1f, 0.0f));
             mesh->Render(camera->GetProjection() * camera->GetView(), lights);
         }
 
-        textController->RenderText(std::to_string(Time::Instance().FPS()), 20, 100, 0.5f, {1.0f, 1.0f, 0.0f});
+        textController->RenderText(std::to_string(meshCount), 20, 60, 0.5f, {1.0f, 0.5f, 1.0f});
+        textController->RenderText(std::to_string(Time::Instance().FPS()), 1160, 60, 0.5f, { 1.0f, 1.0f, 0.0f });
 
         glfwSwapBuffers(window);
         glfwPollEvents();
@@ -163,6 +164,7 @@ void GameController::Load()
         mesh->Create(meshJSON);
         mesh->SetCameraPosition(camera->GetPosition());
         meshes.push_back(mesh);
+        meshCount += mesh->GetInstanceCount();
     }
 #pragma endregion
 

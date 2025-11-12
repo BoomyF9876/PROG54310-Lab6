@@ -36,6 +36,8 @@ public:
 
 	void SetCameraPosition(glm::vec3 _cameraPosition) { cameraPosition = _cameraPosition; };
 
+	int GetInstanceCount() { return instanceCount; }
+
 	void Create(json::JSON& jsonData);
 	void CalculateTransform();
 	void Render(glm::mat4 _pv, const std::list<Mesh*>& _lights);
