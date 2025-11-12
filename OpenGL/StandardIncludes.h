@@ -45,6 +45,9 @@ static json::JSON Get(json::JSON& _json, const std::string& _key)
 	}
 }
 
+#include <ft2build.h>
+#include FT_FREETYPE_H
+
 #define GLM_ENABLE_EXPERIMENTAL
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>

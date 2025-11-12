@@ -6,7 +6,9 @@
 #include "StandardIncludes.h"
 #include "Shader.h"
 #include "Mesh.h"
+#include "Font.h"
 #include "Camera.h"
+#include "TextController.h"
 
 class GameController
 {
@@ -28,13 +30,24 @@ public:
 		return itr->second;
 	}
 
+	Font* GetFont(const char* fontName)
+	{
+		auto itr = fonts.find(fontName);
+		assert(itr != fonts.end());
+		return itr->second;
+	}
+
 private:
 	std::map<std::string, Shader*> shaders;
+	std::map<std::string, Font*> fonts;
 
 	std::list<Mesh*> meshes;
 	std::list<Mesh*> lights;
 
+	TextController* textController = nullptr;
 	Camera* camera = nullptr;
+
+	GLuint vao;
 
 	inline explicit GameController() = default;
 	inline ~GameController() = default;

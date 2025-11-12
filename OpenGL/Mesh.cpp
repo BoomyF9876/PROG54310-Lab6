@@ -9,6 +9,11 @@ Mesh::~Mesh()
 
     delete diffuseTexture;
     delete specularTexture;
+
+    if (instanceData != nullptr)
+    {
+        delete instanceData;
+    }
 }
 
 void Mesh::Create(json::JSON& jsonData)
@@ -28,7 +33,7 @@ void Mesh::Create(json::JSON& jsonData)
     if (jsonData.hasKey("SpecularColor")) LoadVec3(jsonData, "SpecularColor", specularColor);
     if (jsonData.hasKey("SpecularStrength")) specularStrength = Get(jsonData, "SpecularStrength").ToFloat();
 
-    if (jsonData.hasKey("LightType")) lightType = Get(jsonData, "LightType").ToString();
+    //if (jsonData.hasKey("LightType")) lightType = Get(jsonData, "LightType").ToString();
 
     if (jsonData.hasKey("PointLightconstant")) pointLightconstant = Get(jsonData, "PointLightconstant").ToFloat();
     if (jsonData.hasKey("PointLightlinear")) pointLightlinear = Get(jsonData, "PointLightlinear").ToFloat();
@@ -88,6 +93,29 @@ void Mesh::Create(json::JSON& jsonData)
     glGenBuffers(1, &vertexBuffer);
     glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
     glBufferData(GL_ARRAY_BUFFER, vertexData.size() * sizeof(float), vertexData.data(), GL_STATIC_DRAW);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+    if (jsonData.hasKey("InstanceCount")) instanceCount = jsonData["InstanceCount"].ToInt();
+    enableInstancing = instanceCount > 0 ? true : false;
+
+    if (enableInstancing)
+    {
+        glGenBuffers(1, &instanceBuffer);
+        glBindBuffer(GL_ARRAY_BUFFER, instanceBuffer);
+
+        srand(glfwGetTime());
+        instanceData = new glm::mat4[instanceCount];
+        glm::mat4* instanceMat = instanceData;
+        for (unsigned int i = 0; i < instanceCount; i++)
+        {
+            *instanceMat = glm::mat4(1.0f);
+            *instanceMat = glm::translate(*instanceMat, glm::vec3(-20 + rand() % 40, -10 + rand() % 20, -10 + rand() % 20));
+        
+            instanceMat++;
+        }
+        glBufferData(GL_ARRAY_BUFFER, instanceCount * sizeof(glm::mat4), instanceData, GL_STATIC_DRAW);
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
+    }
 
     //indexData = {
     //    2,0,3,2,1,0
@@ -134,6 +162,42 @@ void Mesh::BindAttributes()
 
     glVertexAttrib2fv(shader->GetAttrTexTranslation(), glm::value_ptr(texTranslation));
 
+#pragma region Bind Instancing Data
+    if (enableInstancing)
+    {
+        glBindBuffer(GL_ARRAY_BUFFER, instanceBuffer); // Bind the vertex buffer
+
+        // Set attribute pointers for instance matrix (4 times vec4)
+        glEnableVertexAttribArray(shader->GetAttrInstanceMatrix());
+        glVertexAttribPointer(shader->GetAttrInstanceMatrix(),
+            4, GL_FLOAT, GL_FALSE,  // size (4 components), type, normalized?
+            sizeof(glm::mat4), // stride
+            (void*)0); // instance buffer offset
+
+        glEnableVertexAttribArray(shader->GetAttrInstanceMatrix() + 1);
+        glVertexAttribPointer(shader->GetAttrInstanceMatrix() + 1,
+            4, GL_FLOAT, GL_FALSE,  // size (4 components), type, normalized?
+            sizeof(glm::mat4), // stride
+            (void*)(sizeof(glm::vec4))); // instance buffer offset
+
+        glEnableVertexAttribArray(shader->GetAttrInstanceMatrix() + 2);
+        glVertexAttribPointer(shader->GetAttrInstanceMatrix() + 2,
+            4, GL_FLOAT, GL_FALSE,  // size (4 components), type, normalized?
+            sizeof(glm::mat4), // stride
+            (void*)(2 * sizeof(glm::vec4))); // instance buffer offset
+
+        glEnableVertexAttribArray(shader->GetAttrInstanceMatrix() + 3);
+        glVertexAttribPointer(shader->GetAttrInstanceMatrix() + 3,
+            4, GL_FLOAT, GL_FALSE,  // size (4 components), type, normalized?
+            sizeof(glm::mat4), // stride
+            (void*)(3 * sizeof(glm::vec4))); // instance buffer offset
+
+        glVertexAttribDivisor(shader->GetAttrInstanceMatrix(), 1);
+        glVertexAttribDivisor(shader->GetAttrInstanceMatrix() + 1, 1);
+        glVertexAttribDivisor(shader->GetAttrInstanceMatrix() + 2, 1);
+        glVertexAttribDivisor(shader->GetAttrInstanceMatrix() + 3, 1);
+    }
+#pragma endregion
 }
 
 void Mesh::SetShaderVariables(glm::mat4 _pv, const std::list<Mesh*>& _lights)
@@ -141,6 +205,7 @@ void Mesh::SetShaderVariables(glm::mat4 _pv, const std::list<Mesh*>& _lights)
     shader->SetMat4("World", world);
     shader->SetMat4("WVP", _pv * world);
     shader->SetVec3("CameraPosition", cameraPosition);
+    shader->SetInt("EnableInstancing", enableInstancing);
 
     M_ASSERT((_lights.size() <= 4), "Diffuse Shader only supports 4 lights");
     shader->SetInt("numLights", _lights.size());
@@ -187,13 +252,27 @@ void Mesh::Render(glm::mat4 _wvp, const std::list<Mesh*>& _lights)
     SetShaderVariables(_wvp, _lights);
     BindAttributes();
     
-    glDrawArrays(GL_TRIANGLES, 0, vertexData.size()/8);
+    if (enableInstancing)
+    {
+        glDrawArraysInstanced(GL_TRIANGLES, 0, vertexData.size() / 8, instanceCount);
+    }
+    else
+    {
+        glDrawArrays(GL_TRIANGLES, 0, vertexData.size() / 8);
+    }
 
+    //glDrawArrays(GL_TRIANGLES, 0, vertexData.size() / 8);
     glDisableVertexAttribArray(shader->GetAttrVertices());
-    //glDisableVertexAttribArray(shader->GetAttrColors());
     glDisableVertexAttribArray(shader->GetAttrNormals());
     glDisableVertexAttribArray(shader->GetAttrTexCoords());
     glDisableVertexAttribArray(shader->GetAttrTexTranslation());
+    if (enableInstancing)
+    {
+        glDisableVertexAttribArray(shader->GetAttrInstanceMatrix());
+        glDisableVertexAttribArray(shader->GetAttrInstanceMatrix() + 1);
+        glDisableVertexAttribArray(shader->GetAttrInstanceMatrix() + 2);
+        glDisableVertexAttribArray(shader->GetAttrInstanceMatrix() + 3);
+    }
 }
 
 std::string Mesh::Concat(const std::string& _s1, int _index, const std::string& _s2)

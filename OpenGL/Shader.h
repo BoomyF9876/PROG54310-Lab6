@@ -16,6 +16,7 @@ class Shader
 	GLuint attrTexTranslation = 0;
 	GLuint attrTexSampler1 = 0;
 	GLuint attrTexSampler2 = 0;
+	GLuint attrInstanceMatrix = 0;
 
 	GLint result = GL_FALSE;
 	int infoLogLength = 0;
@@ -24,12 +25,13 @@ public:
 
 	GLuint GetProgramID() { return programID; }
 	GLuint GetAttrVertices() { return attrVertices; }
-
-	void LoadShaders(const char* _vertexFilePath, const char* _fragmentFilePath);
 	GLuint GetAttrWVP() { return attrWVP; }
 	GLuint GetAttrColors() { return attrColors; }
 	GLuint GetAttrNormals() { return attrNormals; }
 	GLuint GetAttrTexCoords() { return attrTexCoords; }
+	GLuint GetAttrInstanceMatrix() { return attrInstanceMatrix; }
+
+	void LoadShaders(const char* _vertexFilePath, const char* _fragmentFilePath);
 	GLuint GetAttrTexTranslation() { return attrTexTranslation; }
 	GLuint GetTexSampler1() { return attrTexSampler1; }
 	GLuint GetTexSampler2() { return attrTexSampler2; }

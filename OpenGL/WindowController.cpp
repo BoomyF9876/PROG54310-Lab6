@@ -29,7 +29,7 @@ void WindowController::NewWindow()
 
 	glfwWindowHint(GLFW_SAMPLES, 4);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	Resolution r = WindowController::GetResolution();
 	window = glfwCreateWindow(r.width, r.height, "Sample", NULL, NULL);
 	M_ASSERT((window != nullptr), "Failed");

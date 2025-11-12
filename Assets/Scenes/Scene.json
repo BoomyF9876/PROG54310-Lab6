@@ -1,138 +1,22 @@
 {
   "Lights": [
     {
-      "LightType": "Directional Light",
       "Shader": "Color",
       "Model": "../Assets/Models/Sphere.obj",
       "Position": {
-        "x": 0.0,
-        "y": 0.0,
-        "z": 4.5
-      },
-      "Scale": {
-        "x": 0.1,
-        "y": 0.1,
-        "z": 0.1
-      },
-      "LightDirection": {
-        "x": 0.0,
-        "y": 0.0,
-        "z": -1.0
-      },
-      "LightColor": {
-        "r": 0.0,
-        "g": 0.0,
-        "b": 1.0
-      },
-      "AmbientColor": {
-        "r": 0.1,
-        "g": 0.1,
-        "b": 0.1
-      },
-      "SpecularColor": {
-        "r": 3.0,
-        "g": 3.0,
-        "b": 3.0
-      }
-    },
-    {
-      "LightType": "Directional Light",
-      "Shader": "Color",
-      "Model": "../Assets/Models/Sphere.obj",
-      "Position": {
-        "x": 4.5,
-        "y": 0.0,
+        "x": 3.0,
+        "y": 1.0,
         "z": 0.0
       },
       "Scale": {
         "x": 0.1,
         "y": 0.1,
         "z": 0.1
-      },
-      "LightDirection": {
-        "x": -1.0,
-        "y": 0.0,
-        "z": 0.0
       },
       "LightColor": {
         "r": 1.0,
-        "g": 0.0,
-        "b": 0.0
-      },
-      "AmbientColor": {
-        "r": 0.1,
-        "g": 0.1,
-        "b": 0.1
-      },
-      "SpecularColor": {
-        "r": 3.0,
-        "g": 3.0,
-        "b": 3.0
-      }
-    },
-    {
-      "LightType": "Spot Light",
-      "Shader": "Color",
-      "Model": "../Assets/Models/Sphere.obj",
-      "Position": {
-        "x": 0.0,
-        "y": 3.0,
-        "z": 0.0
-      },
-      "Scale": {
-        "x": 0.1,
-        "y": 0.1,
-        "z": 0.1
-      },
-      "LightDirection": {
-        "x": 0.0,
-        "y": -1.0,
-        "z": 0.0
-      },
-      "LightColor": {
-        "r": 1.0,
-        "g": 0.4,
-        "b": 1.0
-      },
-      "AmbientColor": {
-        "r": 0.1,
-        "g": 0.1,
-        "b": 0.1
-      },
-      "SpecularColor": {
-        "r": 3.0,
-        "g": 3.0,
-        "b": 3.0
-      },
-      "PointLightconstant": 1.0,
-      "PointLightlinear": 0.045,
-      "PointLightquadratic": 0.0075,
-      "SpotLightconeAngle": 35.0,
-      "SpotLightfalloff": 100.0
-    },
-    {
-      "LightType": "Point Light",
-      "Shader": "Color",
-      "Model": "../Assets/Models/Sphere.obj",
-      "Position": {
-        "x": -4.5,
-        "y": 3.0,
-        "z": 0.0
-      },
-      "Scale": {
-        "x": 0.1,
-        "y": 0.1,
-        "z": 0.1
-      },
-      "LightDirection": {
-        "x": 4.5,
-        "y": -3.0,
-        "z": 0.0
-      },
-      "LightColor": {
-        "r": 0.0,
         "g": 1.0,
-        "b": 0.0
+        "b": 1.0
       },
       "AmbientColor": {
         "r": 0.1,
@@ -143,42 +27,39 @@
         "r": 3.0,
         "g": 3.0,
         "b": 3.0
-      },
-      "PointLightconstant": 1.0,
-      "PointLightlinear": 0.045,
-      "PointLightquadratic": 0.0075
+      }
     }
   ],
   "Meshes": [
     {
       "Shader": "Diffuse",
-      "Model": "../Assets/Models/Monkey.obj",
+      "Model": "../Assets/Models/Cube.obj",
       "Position": {
         "x": 0.0,
         "y": 0.0,
-        "z": 2.0
+        "z": 0.0
       },
       "Scale": {
-        "x": 1.0,
-        "y": 1.0,
-        "z": 1.0
+        "x": 0.1,
+        "y": 0.1,
+        "z": 0.1
       },
-      "SpecularStrength": 8.0
-    },
-    {
-      "Shader": "Diffuse",
-      "Model": "../Assets/Models/Monkey.obj",
-      "Position": {
-        "x": 0.0,
-        "y": 0.0,
-        "z": -2.0
-      },
-      "Scale": {
-        "x": 1.0,
-        "y": 1.0,
-        "z": 1.0
-      },
-      "SpecularStrength": 8.0
+      "SpecularStrength": 8.0,
+      "RotationRate": 1.0,
+      "InstanceCount": 1000
     }
-  ]
+  ],
+  "Fonts": [
+    {
+      "Name": "Arial",
+      "Font": {
+        "Shader": "Font",
+        "Font": "../Assets/Fonts/arial.ttf",
+        "Size": 100
+      }
+    }
+  ],
+  "TextController": {
+    "Font": "Arial"
+  }
 }

@@ -49,8 +49,13 @@ private:
 	Texture* specularTexture = nullptr;
 	GLuint vertexBuffer = 0;
 	GLuint indexBuffer = 0;
+	GLuint instanceBuffer = 0;
 	std::vector<GLfloat> vertexData;
 	std::vector<GLubyte> indexData;
+
+	int instanceCount = 0;
+	bool enableInstancing = false;
+	glm::mat4* instanceData;
 	
 	glm::mat4 world = glm::mat4(1);
 	glm::vec3 position{ 0.0f, 0.0f, 0.0f };

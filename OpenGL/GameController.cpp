@@ -1,6 +1,7 @@
 #include "GameController.h"
 #include "WindowController.h"
 #include "ToolWindow.h"
+#include "EngineTime.h"
 
 void GameController::Initialize()
 {
@@ -8,9 +9,13 @@ void GameController::Initialize()
     
     M_ASSERT(glewInit() == GLEW_OK, "Unable");
     glfwSetInputMode(window, GLFW_STICKY_KEYS, GL_TRUE);
-    //glClearColor(0.1f, 0.1f, 0.1f, 0.0f);
     glEnable(GL_DEPTH_TEST);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     srand(time(0));
+
+    glGenVertexArrays(1, &vao);
+    glBindVertexArray(vao);
 
     Load();
 }
@@ -18,7 +23,12 @@ void GameController::Initialize()
 void GameController::RunGame()
 {
     GLFWwindow* window = WindowController::GetInstance().GetWindow();
+    
+    Time::Instance().Initialize();
+
     do {
+        Time::Instance().Update();
+
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         
         for (auto& light: lights)
@@ -28,9 +38,11 @@ void GameController::RunGame()
         
         for (auto& mesh : meshes)
         {
-            mesh->SetRotation(mesh->GetRotation() + glm::vec3(0.0f, 0.01f, 0.0f));
+            mesh->SetRotation(mesh->GetRotation() + glm::vec3(0.0f, 0.0001f, 0.0f));
             mesh->Render(camera->GetProjection() * camera->GetView(), lights);
         }
+
+        textController->RenderText(std::to_string(Time::Instance().FPS()), 20, 100, 0.5f, {1.0f, 1.0f, 0.0f});
 
         glfwSwapBuffers(window);
         glfwPollEvents();
@@ -53,6 +65,16 @@ void GameController::RunGame()
     for (auto& shader : shaders)
     {
         delete shader.second;
+    }
+
+    for (auto& font : fonts)
+    {
+        delete font.second;
+    }
+
+    if (textController != nullptr)
+    {
+        delete textController;
     }
 
     delete camera;
@@ -143,4 +165,31 @@ void GameController::Load()
         meshes.push_back(mesh);
     }
 #pragma endregion
+
+#pragma region Fonts
+    if (document.hasKey("Fonts"))
+    {
+        json::JSON& fontsJSON = document["Fonts"];
+        for (auto& fontJSON : fontsJSON.ArrayRange())
+        {
+            M_ASSERT(fontJSON.hasKey("Name"), "Font requires a name");
+            std::string fontName = fontJSON["Name"].ToString();
+
+            M_ASSERT(fontJSON.hasKey("Font"), "Font requires a Font node");
+
+            Font* font = new Font();
+            font->Create(fontJSON["Font"]);
+            fonts.emplace(fontName, font);
+        }
+    }
+#pragma endregion
+
+#pragma region TextController
+    if (document.hasKey("TextController"))
+    {
+        textController = new TextController();
+        textController->Create(document["TextController"]);
+    }
+#pragma endregion
+
 }
