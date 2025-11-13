@@ -30,6 +30,15 @@ void GameController::RunGame()
         Time::Instance().Update();
 
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+        if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS && meshCount < 1000)
+        {
+            meshCount++;
+        }
+        if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS && meshCount > 1)
+        {
+            meshCount--;
+        }
         
         for (auto& light: lights)
         {
@@ -39,7 +48,7 @@ void GameController::RunGame()
         for (auto& mesh : meshes)
         {
             mesh->SetRotation(mesh->GetRotation() + Time::Instance().DeltaTime() * glm::vec3(0.0f, 0.1f, 0.0f));
-            mesh->Render(camera->GetProjection() * camera->GetView(), lights);
+            mesh->Render(camera->GetProjection() * camera->GetView(), lights, meshCount);
         }
 
         textController->RenderText(std::to_string(meshCount), 20, 60, 0.5f, {1.0f, 0.5f, 1.0f});
@@ -164,7 +173,6 @@ void GameController::Load()
         mesh->Create(meshJSON);
         mesh->SetCameraPosition(camera->GetPosition());
         meshes.push_back(mesh);
-        meshCount += mesh->GetInstanceCount();
     }
 #pragma endregion
 

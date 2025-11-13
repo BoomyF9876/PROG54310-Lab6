@@ -47,7 +47,7 @@ private:
 	TextController* textController = nullptr;
 	Camera* camera = nullptr;
 
-	int meshCount = 0;
+	int meshCount = 100;
 	GLuint vao;
 
 	inline explicit GameController() = default;

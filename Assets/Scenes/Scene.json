@@ -46,7 +46,7 @@
       },
       "SpecularStrength": 8.0,
       "RotationRate": 1.0,
-      "InstanceCount": 100
+      "InstanceCount": 1000
     }
   ],
   "Fonts": [

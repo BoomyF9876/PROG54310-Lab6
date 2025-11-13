@@ -40,7 +40,7 @@ public:
 
 	void Create(json::JSON& jsonData);
 	void CalculateTransform();
-	void Render(glm::mat4 _pv, const std::list<Mesh*>& _lights);
+	void Render(glm::mat4 _pv, const std::list<Mesh*>& _lights, int count = 0);
 
 private:
 	Shader* shader = nullptr;

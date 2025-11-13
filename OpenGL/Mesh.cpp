@@ -244,7 +244,7 @@ void Mesh::CalculateTransform()
     world = glm::scale(world, scale);
 }
 
-void Mesh::Render(glm::mat4 _wvp, const std::list<Mesh*>& _lights)
+void Mesh::Render(glm::mat4 _wvp, const std::list<Mesh*>& _lights, int count)
 {
     glUseProgram(shader->GetProgramID());
 
@@ -254,7 +254,7 @@ void Mesh::Render(glm::mat4 _wvp, const std::list<Mesh*>& _lights)
     
     if (enableInstancing)
     {
-        glDrawArraysInstanced(GL_TRIANGLES, 0, vertexData.size() / 8, instanceCount);
+        glDrawArraysInstanced(GL_TRIANGLES, 0, vertexData.size() / 8, count);
     }
     else
     {
