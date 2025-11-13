@@ -33,7 +33,7 @@
   "Meshes": [
     {
       "Shader": "Diffuse",
-      "Model": "../Assets/Models/Monkey.obj",
+      "Model": "../Assets/Models/Suzzane.obj",
       "Position": {
         "x": 0.0,
         "y": 0.0,
